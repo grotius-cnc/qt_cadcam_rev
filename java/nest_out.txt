@@ -1,0 +1,31 @@
+Grotius Nest Output
+bid
+2
+platenumber
+0
+translation x
+205.0
+translation y
+-4195.0001
+rotation
+0.0
+bid
+1
+platenumber
+0
+translation x
+3804.4227
+translation y
+-287.1851
+rotation
+90.0
+bid
+0
+platenumber
+0
+translation x
+4113.2681
+translation y
+312.8144
+rotation
+90.0
