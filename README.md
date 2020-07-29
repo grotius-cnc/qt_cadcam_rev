@@ -3,6 +3,8 @@ CadCam program in development, for usage with cnc machines.
 
 Work in progress, but output's gcode.
 
+To download the program's appimage Cadcam v1.0: https://github.com/grotius-cnc/QT_CadCam_rev0/releases/tag/v1.0
+
 Program includes :
 
 - set up tool lists for Mill, Drill, Plasma-laser and Oxyfuel.
@@ -21,6 +23,12 @@ Todo :
 - program more in module style.
 - tangential gcode output
 - rotary axis gcode output, to cut shapes in metal profiles.
+
+Testers comment's:
+- very responsive
+- fast
+- why not use enum for object.types?
+- add object selection by mouse and then cut operation
 
 See the deploy directory how to retrieve the appimage.
 
