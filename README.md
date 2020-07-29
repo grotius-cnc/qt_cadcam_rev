@@ -1,5 +1,5 @@
 # QT_CadCam_rev0
-CadCam program in development
+CadCam program in development, for usage with cnc machines.
 
 Work in progress, but output's gcode.
 
@@ -19,6 +19,8 @@ Todo :
 - keep parts together option.
 - insert cad tools, etc.
 - program more in module style.
+- tangential gcode output
+- rotary axis gcode output, to cut shapes in metal profiles.
 
 See the deploy directory how to retrieve the appimage.
 
