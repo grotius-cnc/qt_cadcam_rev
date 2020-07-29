@@ -9,4 +9,6 @@ Todo :
 
 See the deploy directory how to retrieve the appimage.
 
-![alt text](https://github.com/grotius-cnc/QT_CadCam_rev0/blob/master/result.png
+![alt text](https://github.com/grotius-cnc/QT_CadCam_rev0/blob/master/result.png)
+
+
