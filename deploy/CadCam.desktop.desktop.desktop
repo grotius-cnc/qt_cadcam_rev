@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=CadCam
+Exec=QT_Cad
+Icon=Cad
+Categories=Office;
+X-Appimage-Version=
+

@@ -1,0 +1,17 @@
+
+in terminal, qt location..:
+
+
+https://www.youtube.com/watch?v=2B--nzfoQ9s
+
+
+
+export PATH=/home/user/Qt/5.15.0/gcc_64/bin/:$PATH
+./linuxdeployqt-6-x86_64.AppImage QT_Cad
+
+
+after files are made, make an -appimage by :
+
+./linuxdeployqt-6-x86_64.AppImage QT_Cad -appimage
+
+
