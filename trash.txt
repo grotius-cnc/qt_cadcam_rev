@@ -1,0 +1,176 @@
+
+https://www.oracle.com/java/technologies/javase-jdk14-downloads.html
+
+POINT arc_center(double xs,double ys,double xe, double ye, double radius){
+    POINT p;
+    double radsq=radius*radius;
+    double q=sqrt(((xe-xs)*(xe-xs))+((ye-ys)*(ye-ys)));
+    double x3=(xs+xe)/2;
+    double y3=(ys+ye)/2;
+    //p.x=x3+sqrt(radsq-((q/2)*(q/2)))*((ys-ye)/q); //G3
+    //p.y=y3+sqrt(radsq-((q/2)*(q/2)))*((xe-xs)/q);
+
+    p.x=x3-sqrt(radsq-((q/2)*(q/2)))*((ys-ye)/q); //G2
+    p.y=y3-sqrt(radsq-((q/2)*(q/2)))*((xe-xs)/q);
+    return p;
+}
+
+
+auto construct_objects =[](std::vector<OBJECT>::iterator it){
+return array;
+};
+
+  //delete ui->listWidget_jobs->item(job);
+
+
+void cam_pocket_offset(double offset, std::string layer, double overlap, int job){
+
+    //normal pocket without islands. use offset -1 or 1.
+    std::vector<CONTOUR>::iterator it;
+    std::vector<int>::iterator it1;
+    std::vector<OBJECT>::iterator it2;
+    std::vector<POINT>::iterator it3,it4;
+
+    //copy first offset
+    int i=0;
+    for(it=contours.begin(); it<contours.end(); it++){
+
+        bool trigger=0; //to enable endless pocketing
+
+        it1=it->sequence.begin();
+        int object = *it1;
+        it2=cad.begin()+object;
+        if(it2->red==255 && it2->green==255 && it2->blue==0 && it2->alpha==255){ //yellow, inverse contour
+            swap_contour_i1(i);
+        }
+
+        cavc::Polyline<double> outerloop;
+        for(it1=it->sequence.begin(); it1<it->sequence.end(); it1++){
+            int object = *it1;
+            it2=cad.begin()+object;
+
+            if(it2->layer==layer){ //we only want to cut the selected combobox layer
+
+                if(it2->type=="spline"){
+                    std::vector<POINT> points=spline_to_points(it2,0.01);
+                    for(it3=points.begin(); it3<points.end(); it3++){ //we don't need the spline endpoint
+                        outerloop.addVertex(it3->x, it3->y, 0);
+                    }
+                }
+                if(it2->type=="ellipse"){
+                    std::vector<POINT> points=ellipse_to_points(it2,0.01);
+                    std::reverse(points.begin(),points.end()); //make cw contour
+                    for(it3=points.begin(); it3<points.end(); it3++){ //we don't need the spline endpoint
+                        outerloop.addVertex(it3->x, it3->y, 0);
+                    }
+                }
+                if(it2->type=="bezier"){
+                    std::vector<POINT> points=bezier_to_points(it2,0.01);
+                    std::reverse(points.begin(),points.end()); //make cw contour
+                    for(it3=points.begin(); it3<points.end(); it3++){ //we don't need the spline endpoint
+                        outerloop.addVertex(it3->x, it3->y, 0);
+                    }
+                }
+                if(it2->type=="rectangular"||it2->type=="linestrip"||it2->type=="polygon"){
+                    outerloop.addVertex(it2->start.x, it2->start.y, 0); //startpoint
+                    std::cout<<"linestrip startpoint inserted"<<std::endl;
+                    for(it4=it2->control.begin(); it4<it2->control.end(); it4++){ //controlpoints
+                        std::cout<<"linestrip controlpoint inserted"<<std::endl;
+                        outerloop.addVertex(it4->x, it4->y, 0);
+                    }
+                }
+                if(it2->type=="arc"){
+                    std::vector<double> bulge=arc_bulge(it2);
+                    if(bulge[1]==0){ //single arc
+                        outerloop.addVertex(it2->start.x, it2->start.y, bulge[0]); //startpoint arc + bulge
+                    }
+                    if(bulge[1]==1){ //dual arc
+                        outerloop.addVertex(it2->start.x, it2->start.y, bulge[0]); //startpoint arc + bulge
+                        outerloop.addVertex(it2->control.front().x, it2->control.front().y, bulge[0]); //startpoint arc + bulge
+                    }
+                }
+                if(it2->type=="circle"){
+                    outerloop.addVertex(it2->center.x+it2->radius, it2->center.y, -1); //startpoint arc + full bulge=semicircle, -1=g2, 1=g3
+                    outerloop.addVertex(it2->center.x-it2->radius, it2->center.y, -1); //startpoint arc + bulge
+                }
+                if(it2->type=="line"){
+                    outerloop.addVertex(it2->start.x, it2->start.y, 0);
+                }
+
+                trigger=1;
+            }
+        }
+
+        outerloop.isClosed() = true;
+
+        double pocket_offset=offset;
+        while(trigger==1){
+
+            //process data
+            std::vector<cavc::Polyline<double>> results = cavc::parallelOffset(outerloop, pocket_offset);
+            if(results.size()==0){trigger=0; break;}
+            OBJECT obj;
+
+            for(unsigned int i=0; i<results.size(); i++){ //cw loops
+                for(unsigned int j=0; j<results.at(i).vertexes().size()-1; j++){
+
+                    if(results.at(i).vertexes().at(j).bulge()==0){ //line
+                        obj.type="line";
+                        obj.red=0; obj.green=255; obj.blue=0; obj.alpha=255;
+                        obj.start.x=results.at(i).vertexes().at(j).x();
+                        obj.start.y=results.at(i).vertexes().at(j).y();
+                        obj.end.x=results.at(i).vertexes().at(j+1).x();
+                        obj.end.y=results.at(i).vertexes().at(j+1).y();
+                        obj.layer=layer;
+                        obj.job=job;
+                        cam.push_back(obj);
+                    }
+                    if(results.at(i).vertexes().at(j).bulge()!=0){ //arc
+                        obj.type="arc";
+                        obj.red=0; obj.green=255; obj.blue=0; obj.alpha=255;
+                        obj.start.x=results.at(i).vertexes().at(j).x();
+                        obj.start.y=results.at(i).vertexes().at(j).y();
+                        obj.end.x=results.at(i).vertexes().at(j+1).x();
+                        obj.end.y=results.at(i).vertexes().at(j+1).y();
+                        POINT p=bulge_to_arc_controlpoint({obj.start.x,obj.start.y,0},{obj.end.x,obj.end.y,0},results.at(i).vertexes().at(j).bulge());
+                        obj.control.clear();
+                        obj.control.push_back({p.x,p.y,0});
+                        obj.layer=layer;
+                        obj.job=job;
+                        cam.push_back(obj);
+                    }
+                }
+
+                //add last primitive of contour
+                if(results.at(i).vertexes().back().bulge()==0){ //line
+                    obj.type="line";
+                    obj.red=0; obj.green=255; obj.blue=0; obj.alpha=255;
+                    obj.end.x=results.at(i).vertexes().front().x();
+                    obj.end.y=results.at(i).vertexes().front().y();
+                    obj.start.x=results.at(i).vertexes().back().x();
+                    obj.start.y=results.at(i).vertexes().back().y();
+                    obj.layer=layer;
+                    obj.job=job;
+                    cam.push_back(obj);
+
+                }
+                if(results.at(i).vertexes().back().bulge()!=0){ //arc
+                    obj.type="arc";
+                    obj.red=0; obj.green=255; obj.blue=0; obj.alpha=255;
+                    obj.end.x=results.at(i).vertexes().front().x();
+                    obj.end.y=results.at(i).vertexes().front().y();
+                    obj.start.x=results.at(i).vertexes().back().x();
+                    obj.start.y=results.at(i).vertexes().back().y();
+                    POINT p=bulge_to_arc_controlpoint({obj.start.x,obj.start.y,0},{obj.end.x,obj.end.y,0},results.at(i).vertexes().back().bulge());
+                    obj.control.clear();
+                    obj.control.push_back({p.x,p.y,0});
+                    obj.layer=layer;
+                    obj.job=job;
+                    cam.push_back(obj);
+                }
+            }
+            pocket_offset+=(offset*overlap);
+        }
+        i++;
+    }
+}
