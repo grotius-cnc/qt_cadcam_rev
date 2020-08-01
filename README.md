@@ -3,7 +3,8 @@ CadCam program in development, for usage with cnc machines.
 
 Work in progress, but output's gcode.
 
-To download the program's appimage Cadcam v1.0: https://github.com/grotius-cnc/QT_CadCam_rev0/releases/tag/v1.0
+To download the program's appimage and latest source code, check the latest release, on the right of the screen.
+The zip contains latest appimage + source code is in the zip file !
 
 Program includes :
 
@@ -17,10 +18,12 @@ Program includes :
 - bezier, ellipse, polygon, linestrip, line, arc, circle, spline support.
 - nesting support with a java based interface, has to be compiled with lower java version to improve compatibility with linux.
 
-Todo : 
+Done :
 - keep parts together option.
+- auto nesting, currently not nesting the pocket islands.
+
+Todo :
 - insert cad tools, etc.
-- program more in module style.
 - tangential gcode output
 - rotary axis gcode output, to cut shapes in metal profiles.
 
@@ -30,8 +33,12 @@ Testers comment's:
 - why not use enum for object.types?
 - add object selection by mouse and then cut operation
 
-See the deploy directory how to retrieve the appimage.
+See the deploy directory how to retrieve the appimage by yourself.
 
+Example of making a dxf drawing in Librecad:
+![alt text](https://github.com/grotius-cnc/QT_CadCam_rev0/blob/master/librecad_example.png)
+
+Result after autonesting, jobs are pocket, drill hole (in blue), plasma contour cut.
 ![alt text](https://github.com/grotius-cnc/QT_CadCam_rev0/blob/master/result.png)
 
 
