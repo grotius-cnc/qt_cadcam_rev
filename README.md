@@ -1,10 +1,15 @@
 # QT_CadCam_rev0
 CadCam program in development, for usage with cnc machines.
 
-Work in progress, but output's gcode.
-
 To download the program's appimage and latest source code, check the latest release, on the right of the screen.
 The zip contains latest appimage + source code is in the zip file !
+
+Example of making a dxf drawing in Librecad:
+![alt text](https://github.com/grotius-cnc/QT_CadCam_rev0/blob/master/librecad_example.png)
+
+Result after autonesting, jobs are pocket, drill hole (in blue), plasma contour cut.
+![alt text](https://github.com/grotius-cnc/QT_CadCam_rev0/blob/master/result.png)
+
 
 Program includes :
 
@@ -32,11 +37,3 @@ Testers comment's:
 - add object selection by mouse and then cut operation
 
 See the deploy directory how to retrieve the appimage by yourself.
-
-Example of making a dxf drawing in Librecad:
-![alt text](https://github.com/grotius-cnc/QT_CadCam_rev0/blob/master/librecad_example.png)
-
-Result after autonesting, jobs are pocket, drill hole (in blue), plasma contour cut.
-![alt text](https://github.com/grotius-cnc/QT_CadCam_rev0/blob/master/result.png)
-
-
