@@ -29,6 +29,7 @@ Todo :
 - tangential gcode output
 - rotary axis gcode output, to cut shapes in metal profiles.
 - auto nesting, currently not nesting the pocket islands, the nesting see this islands as inner contours at the moment.
+- compile for windows and make .pro file compatible for windows.
 
 Testers comment's:
 - very responsive
