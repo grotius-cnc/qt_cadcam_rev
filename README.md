@@ -16,16 +16,14 @@ Program includes :
 - can import librecad, inkscape and freecad dxf's.
 - true spline implementation.
 - bezier, ellipse, polygon, linestrip, line, arc, circle, spline support.
-- nesting support with a java based interface, has to be compiled with lower java version to improve compatibility with linux.
-
-Done :
-- keep parts together option.
-- auto nesting, currently not nesting the pocket islands.
+- nesting support with a java based interface, supports java 1.8. (using a downgrade compile with netbeans)
+- keep parts together output.
 
 Todo :
 - insert cad tools, etc.
 - tangential gcode output
 - rotary axis gcode output, to cut shapes in metal profiles.
+- auto nesting, currently not nesting the pocket islands, the nesting see this islands as inner contours at the moment.
 
 Testers comment's:
 - very responsive
